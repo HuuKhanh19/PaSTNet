@@ -1,0 +1,27 @@
+{
+  "batch_size": 16,
+  "dataset": "bbbp",
+  "evaluation_loader_seed": null,
+  "evaluation_precision": "float32",
+  "file": "refined_BBBP.csv",
+  "grad_clip": 5.0,
+  "learning_rate": 0.001,
+  "max_epochs": 300,
+  "metric": "roc_auc",
+  "microbatch_size": 4,
+  "model_seed": 42,
+  "num_threads": 1,
+  "optimizer": "Adam",
+  "patience": 40,
+  "scheduler": "none",
+  "smiles_column": "SMILES",
+  "split_seeds": [
+    0,
+    1,
+    2
+  ],
+  "target_column": "class",
+  "task": "classification",
+  "training_precision": "bfloat16",
+  "weight_decay": 0.0
+}

@@ -1,0 +1,27 @@
+{
+  "batch_size": 16,
+  "dataset": "freesolv",
+  "evaluation_loader_seed": 42,
+  "evaluation_precision": "bfloat16",
+  "file": "refined_FreeSolv.csv",
+  "grad_clip": 5.0,
+  "learning_rate": 0.001,
+  "max_epochs": 300,
+  "metric": "rmse",
+  "microbatch_size": 16,
+  "model_seed": 42,
+  "num_threads": 1,
+  "optimizer": "Adam",
+  "patience": 40,
+  "scheduler": "none",
+  "smiles_column": "smiles",
+  "split_seeds": [
+    0,
+    1,
+    2
+  ],
+  "target_column": "measured",
+  "task": "regression",
+  "training_precision": "bfloat16",
+  "weight_decay": 0.0
+}
