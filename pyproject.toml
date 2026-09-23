@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pastnet"
+version = "0.1.0"
+description = "Path-aligned learning across molecular conformer ensembles"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "torch==2.8.0",
+    "torch-geometric==2.7.0",
+    "numpy==2.2.6",
+    "pandas==2.2.3",
+    "scikit-learn==1.7.2",
+    "rdkit==2026.3.2",
+    "jarvis-tools==2026.6.12",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+pastnet = "pastnet.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pastnet*"]
+
+[tool.setuptools.package-data]
+pastnet = ["configs/*.json", "reference/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
