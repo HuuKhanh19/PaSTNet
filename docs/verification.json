@@ -1,0 +1,142 @@
+{
+  "checkpoint_replay": [
+    {
+      "absolute_error": 2.0631765400569435e-06,
+      "dataset": "esol",
+      "metric": "rmse",
+      "reference": 0.8224853673548065,
+      "replayed": 0.8224874305313465,
+      "seed": 0
+    },
+    {
+      "absolute_error": 0.000347064946499831,
+      "dataset": "esol",
+      "metric": "rmse",
+      "reference": 0.7463632054702195,
+      "replayed": 0.7460161405237197,
+      "seed": 1
+    },
+    {
+      "absolute_error": 0.00020395854640486988,
+      "dataset": "esol",
+      "metric": "rmse",
+      "reference": 0.7137331591687036,
+      "replayed": 0.7139371177151085,
+      "seed": 2
+    },
+    {
+      "absolute_error": 0.005095140343402749,
+      "dataset": "freesolv",
+      "metric": "rmse",
+      "reference": 1.3678762327643426,
+      "replayed": 1.3627810924209398,
+      "seed": 0
+    },
+    {
+      "absolute_error": 0.0,
+      "dataset": "freesolv",
+      "metric": "rmse",
+      "reference": 2.1748804356546096,
+      "replayed": 2.1748804356546096,
+      "seed": 1
+    },
+    {
+      "absolute_error": 9.833907719225543e-05,
+      "dataset": "freesolv",
+      "metric": "rmse",
+      "reference": 1.5423734756035874,
+      "replayed": 1.5422751365263951,
+      "seed": 2
+    },
+    {
+      "absolute_error": 0.0,
+      "dataset": "bace",
+      "metric": "roc_auc",
+      "reference": 0.8801563178462875,
+      "replayed": 0.8801563178462875,
+      "seed": 0
+    },
+    {
+      "absolute_error": 0.0,
+      "dataset": "bace",
+      "metric": "roc_auc",
+      "reference": 0.8658536585365855,
+      "replayed": 0.8658536585365855,
+      "seed": 1
+    },
+    {
+      "absolute_error": 0.0,
+      "dataset": "bace",
+      "metric": "roc_auc",
+      "reference": 0.7904889228418641,
+      "replayed": 0.7904889228418641,
+      "seed": 2
+    }
+  ],
+  "cpu_forward_max_abs_error": 0.0,
+  "cpu_gradient_max_abs_error": 0.0,
+  "date": "2026-09-23",
+  "full_training_rerun": false,
+  "initialization_rng_equal": true,
+  "initialization_tensors_equal": true,
+  "model_parameter_count": 667548,
+  "raw_datasets_checked": 6,
+  "regenerated_conformer_entries_exact": 3,
+  "smoke_runs": [
+    {
+      "completed": true,
+      "dataset": "esol",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    },
+    {
+      "completed": true,
+      "dataset": "freesolv",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    },
+    {
+      "completed": true,
+      "dataset": "lipo",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    },
+    {
+      "completed": true,
+      "dataset": "bace",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    },
+    {
+      "completed": true,
+      "dataset": "bbbp",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    },
+    {
+      "completed": true,
+      "dataset": "clintox",
+      "epochs": 2,
+      "n_test": 8,
+      "n_train": 8,
+      "n_valid": 8,
+      "test_evaluations": 1
+    }
+  ],
+  "split_partitions_checked": 54
+}
