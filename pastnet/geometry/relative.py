@@ -165,7 +165,7 @@ def fit_training_bond_scale(splits, cache):
 
     def training_lengths():
         for molecule in train:
-            entry = cache.load(molecule.mol_id, expected_smiles=molecule.smiles)
+            entry = cache.load(molecule.mol_id, expected_smiles=molecule.canonical_smiles)
             mol = molecule_from_smiles(entry.graph_smiles)
             if mol is None or atom_order_signature(mol) != entry.metadata.get("atom_order"):
                 raise ValueError("Cached atom order does not match the PCNN graph molecule")
