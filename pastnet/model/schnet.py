@@ -107,17 +107,10 @@ class InteractionBlock(nn.Module):
         return x
 
 
-SCHNET_SOURCE_URL = "https://github.com/HuuKhanh19/SchNet-GP/blob/9cef51083d02b4c0c7c53fd6e99d818ef269b13c/src/models/schnet.py"
-
-
-SCHNET_SOURCE_COMMIT = "9cef51083d02b4c0c7c53fd6e99d818ef269b13c"
-
-
 SCHNET_SOURCE_SHA256 = "04ec32ba471247c7885d027b1cd5733130400ad88c97ee6d9c347ad4bcd3cd58"
 
 
 SCHNET_SETTINGS = dict(
-    source_url=SCHNET_SOURCE_URL, source_commit=SCHNET_SOURCE_COMMIT,
     source_sha256=SCHNET_SOURCE_SHA256,
     hidden_dim=128, num_interactions=3, cutoff=10.0, num_rbf=50,
     rbf_centers="linspace(0,10,50)",

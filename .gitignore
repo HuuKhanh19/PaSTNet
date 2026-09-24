@@ -12,3 +12,5 @@ dist/
 *.npz
 .verification/
 .DS_Store
+/iclr2027/
+/paper_records/

@@ -15,7 +15,7 @@ from pastnet.data.cache import initialize_cache
 from pastnet.data.conformers import ConformerConfig, ConformerGenerationError, generate_conformers
 from pastnet.io import frame_digest, json_text, sha256, write_json, write_once
 
-SOURCE_COMMIT = "9cef51083d02b4c0c7c53fd6e99d818ef269b13c"
+SPLITTER_SHA256 = "5297c60a3343c95b6cac98d3bfbc3c36965c5499472d410d0f63d5efb61335af"
 
 
 def molecule_identity(smiles):
@@ -92,7 +92,7 @@ def prepare(dataset, raw_dir="data/raw", data_dir="data/processed", seeds=(0, 1,
         raise ValueError(f"Conformer failures differ from reference: extra={sorted(failed-expected_failed)}, "
                          f"missing={sorted(expected_failed-failed)}. Cache is retained for inspection.")
     report = dict(dataset=dataset, raw_sha256=sha256(Path(raw_dir) / load_config(dataset)["file"]),
-                  split_source_commit=SOURCE_COMMIT, generator=asdict(ConformerConfig()),
+                  split_source_sha256=SPLITTER_SHA256, generator=asdict(ConformerConfig()),
                   cache_fingerprint=cache.fingerprint, cache_index_sha256=sha256(cache.directory / "index.jsonl"),
                   excluded=[cache.index[key] for key in sorted(failed)],
                   filter_policy="remove_fixed_conformer_failures_after_split_without_reshuffling", splits={})

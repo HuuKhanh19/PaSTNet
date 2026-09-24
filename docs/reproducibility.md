@@ -14,7 +14,7 @@ this release does not implement the two-endpoint ClinTox benchmark.
 
 The inputs are the six refined CSV files listed in the README. Their exact
 SHA-256 fingerprints and the ordered SMILES/target fingerprints for every
-partition are in [`pastnet/reference/data.json`](../pastnet/reference/data.json).
+partition are in `pastnet/reference/data.json`.
 The latter normalize numeric formatting so `0` and `0.0` describe the same label.
 The release does not include the raw inputs. Changing their contents defines
 a different input set and is rejected by the reference preparation command.
@@ -29,7 +29,7 @@ membership. Unexpected conformer failures stop preparation for inspection.
 ## Release checks
 
 The following checks were performed on 2026-09-23. Machine-readable outcomes
-are in [`verification.json`](verification.json).
+are in `docs/verification.json`.
 
 | Check | Outcome |
 |---|---|
