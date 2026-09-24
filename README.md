@@ -6,11 +6,9 @@ PaSTNet learns across aligned atoms, bonds, angles, and torsions in molecular co
 
 ## Installation
 
-Use Python 3.10 and a CUDA GPU with BF16 support for the E0 experiments. Dependencies are pinned in [`pyproject.toml`](pyproject.toml).
+Use Python 3.10 and a CUDA GPU with BF16 support for the E0 experiments. Dependencies are pinned in `pyproject.toml`. From the root of the downloaded repository, run:
 
 ```bash
-git clone https://github.com/HuuKhanh19/PaSTNet.git
-cd PaSTNet
 conda create -n pastnet python=3.10 -y
 conda activate pastnet
 python -m pip install --upgrade pip
@@ -33,7 +31,7 @@ Place the six **refined CSV inputs** in `data/raw/`. Use the filenames and colum
 | BBBP | `refined_BBBP.csv` | `SMILES` | `class` | 1,753 | ROC-AUC ↑ |
 | ClinTox | `refined_ClinTox.csv` | `smiles` | `CT_TOX` | 1,336 | ROC-AUC ↑ |
 
-ClinTox uses the **single CT_TOX endpoint**. The preparation step validates raw-file fingerprints and all ordered split memberships against [`pastnet/reference/data.json`](pastnet/reference/data.json).
+ClinTox uses the **single CT_TOX endpoint**. The preparation step validates raw-file fingerprints and all ordered split memberships against `pastnet/reference/data.json`.
 
 ## Reproduce E0
 
@@ -61,10 +59,10 @@ python -m pastnet run --dataset all --workers 4 --device cuda --resume
 
 ## Experimental protocol
 
-- **Splits:** the random scaffold splitter is copied unchanged from [SchNet-GP commit `9cef510`](https://github.com/HuuKhanh19/SchNet-GP/commit/9cef51083d02b4c0c7c53fd6e99d818ef269b13c). It groups chirality-aware Bemis–Murcko scaffolds, allocates test groups first, then validation groups. The requested fractions are 10% test and 10% of the remainder for validation, approximately **81/9/10**, subject to whole-scaffold allocation. Split seeds are 0, 1, and 2; initialization and training-loader seed are fixed at 42.
+- **Splits:** the random scaffold splitter is included in `pastnet/_vendor/schnet_gp_splitter.py`. It groups chirality-aware Bemis–Murcko scaffolds, allocates test groups first, then validation groups. The requested fractions are 10% test and 10% of the remainder for validation, approximately **81/9/10**, subject to whole-scaffold allocation. Split seeds are 0, 1, and 2; initialization and training-loader seed are fixed at 42.
 - **Conformers:** ETKDGv3 generates up to 20 candidates. MMFF94s optimization, with UFF fallback, is followed by lowest-energy initialization and greedy max–min heavy-atom RMSD selection at 0.5 Å, retaining up to five conformers. Explicit hydrogens and atom correspondence are preserved. Five fixed Lipo failures and thirteen fixed ClinTox failures are removed **after splitting**, without reshuffling. IDs and reasons are saved in the preparation manifests.
 - **Training:** Adam, learning rate `1e-3`, no weight decay or scheduler, batch size 16, gradient clipping at 5, at most 300 epochs, and patience 40. Regression uses training-only target z-scores and MSE; classification uses unweighted binary cross-entropy on logits. Validation RMSE or ROC-AUC selects the checkpoint; the selected model is evaluated on test once.
-- **Precision:** training uses BF16. ESOL and FreeSolv also evaluate with BF16; Lipo and classification tasks evaluate in FP32. Lipo and classification tasks accumulate gradients over microbatches of four molecules. The full model has **667,548 parameters**. Dataset recipes are in [`pastnet/configs/`](pastnet/configs/).
+- **Precision:** training uses BF16. ESOL and FreeSolv also evaluate with BF16; Lipo and classification tasks evaluate in FP32. Lipo and classification tasks accumulate gradients over microbatches of four molecules. The full model has **667,548 parameters**. Dataset recipes are in `pastnet/configs/`.
 
 ## Outputs and verification
 
@@ -82,8 +80,8 @@ After data preparation, check a small training run:
 python -m pastnet train --dataset esol --seeds 0 --device cpu --smoke
 ```
 
-Smoke runs use two FP32 epochs on up to eight rows per split, write to a separate `smoke/` directory, and are excluded from benchmark summaries. Numerical results can vary across GPU architectures and software builds; the pinned recipes and data fingerprints define the reference protocol. Release checks and their scope are recorded in [`docs/reproducibility.md`](docs/reproducibility.md).
+Smoke runs use two FP32 epochs on up to eight rows per split, write to a separate `smoke/` directory, and are excluded from benchmark summaries. Numerical results can vary across GPU architectures and software builds; the pinned recipes and data fingerprints define the reference protocol. Release checks and their scope are recorded in `docs/reproducibility.md`.
 
 ## Acknowledgments
 
-PaSTNet builds on SchNet-GP and the Path Complex Neural Network atom/bond encodings. Source attribution and adaptation details are in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The code is distributed under the [MIT license](LICENSE).
+PaSTNet builds on SchNet-GP and the Path Complex Neural Network atom/bond encodings. Source attribution and adaptation details are in `THIRD_PARTY_NOTICES.md`. The code is distributed under the MIT license in `LICENSE`.
