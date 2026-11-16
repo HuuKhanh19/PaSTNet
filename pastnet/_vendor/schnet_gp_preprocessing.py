@@ -1,4 +1,4 @@
-"""SchNet-GP preprocessing with English comments and docstrings."""
+"""Preprocessing functions extracted unchanged from pinned SchNet-GP."""
 
 from typing import List
 import pandas as pd
