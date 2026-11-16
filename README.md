@@ -5,8 +5,8 @@ Implementation of **Pathwise Relational Conformer Tensors for Molecular Ensemble
 PaSTNet learns across aligned atoms, bonds, angles, and torsions in molecular conformer ensembles. It combines a SchNet spatial encoder with three geometry-conditioned path propagation and Pathwise State Tensor (PaST) stages, followed by learned pathwise conformer pooling. This repository contains the complete PaSTNet model and the E0 training pipeline for six molecular property benchmarks.
 
 The eight Table 2 interaction operators on ESOL, FreeSolv and BACE are available
-through `python -m pastnet.table2`. See [Table 2 reproduction](docs/table2.md) for
-the five-split protocol, variant names and commands.
+through `python -m pastnet.table2`. Run `python -m pastnet.table2 train --help`
+for available variants and options.
 
 ## Installation
 
@@ -84,7 +84,7 @@ After data preparation, check a small training run:
 python -m pastnet train --dataset esol --seeds 0 --device cpu --smoke
 ```
 
-Smoke runs use two FP32 epochs on up to eight rows per split, write to a separate `smoke/` directory, and are excluded from benchmark summaries. Numerical results can vary across GPU architectures and software builds; the pinned recipes and data fingerprints define the reference protocol. Release checks and their scope are recorded in `docs/reproducibility.md`.
+Smoke runs use two FP32 epochs on up to eight rows per split, write to a separate `smoke/` directory, and are excluded from benchmark summaries. Numerical results can vary across GPU architectures and software builds; the pinned recipes and data fingerprints define the reference protocol.
 
 ## Acknowledgments
 
