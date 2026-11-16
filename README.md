@@ -88,4 +88,4 @@ Smoke runs use two FP32 epochs on up to eight rows per split, write to a separat
 
 ## Acknowledgments
 
-PaSTNet builds on SchNet-GP and the Path Complex Neural Network atom/bond encodings. Source attribution and adaptation details are in `THIRD_PARTY_NOTICES.md`. The code is distributed under the MIT license in `LICENSE`.
+PaSTNet builds on SchNet-GP and the Path Complex Neural Network atom/bond encodings. The code is distributed under the MIT license in `LICENSE`.

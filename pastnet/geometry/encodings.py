@@ -1,4 +1,4 @@
-"""PCNN-compatible atomic and bond encodings; see THIRD_PARTY_NOTICES.md."""
+"""PCNN-compatible atomic and bond encodings."""
 
 import torch
 from torch import nn
