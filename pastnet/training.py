@@ -135,13 +135,17 @@ def save_checkpoint(path, state):
     temporary.replace(path)
 
 
-def train(dataset, seed=0, data_dir="data/processed", results_dir="results", device="cuda", smoke=False, resume=False):
+def train(dataset, seed=0, data_dir="data/processed", results_dir="results", device="cuda", smoke=False, resume=False,
+          *, variant=None):
     cfg = load_config(dataset)
+    if variant is not None:
+        from pastnet.table2 import load_recipe
+        cfg = load_recipe(dataset, variant)
     if seed not in cfg["split_seeds"]:
-        raise ValueError("E0 uses split seeds 0, 1, and 2")
+        raise ValueError(f"Recipe requires split seeds from {cfg['split_seeds']}")
     device = torch.device(device)
     if not smoke and (device.type != "cuda" or not torch.cuda.is_available() or not torch.cuda.is_bf16_supported()):
-        raise RuntimeError("The E0 recipe requires a BF16-capable CUDA GPU. Use --smoke --device cpu for a functional check.")
+        raise RuntimeError("The training recipe requires a BF16-capable CUDA GPU. Use --smoke --device cpu for a functional check.")
     if smoke:
         cfg.update(max_epochs=2, training_precision="float32", evaluation_precision="float32")
     torch.set_num_threads(cfg["num_threads"])
@@ -154,6 +158,8 @@ def train(dataset, seed=0, data_dir="data/processed", results_dir="results", dev
         if sha256(split_dir / f"{name}.csv") != manifest["splits"][str(seed)][name]["sha256"]:
             raise ValueError(f"Prepared {name} split was modified; run preparation in a clean directory")
     cache = ConformerCache(directory / "conformers_etkdg_mmff")
+    if variant is not None and cache.manifest["config"]["max_conformers"] != 5:
+        raise ValueError("Table 2 requires the shared K=5 conformer cache")
     if cache.fingerprint != manifest["cache_fingerprint"] or sha256(cache.directory / "index.jsonl") != manifest["cache_index_sha256"]:
         raise ValueError("Conformer cache manifest/index changed after data preparation")
     splits = load_splits(MoleculeConfig(data_root=directory / "splits", split_seed=seed, include_test=False))
@@ -163,7 +169,10 @@ def train(dataset, seed=0, data_dir="data/processed", results_dir="results", dev
     scaler = standardizer([r.target for r in records["train"]]) if cfg["task"] == "regression" else dict(mean=0., std=1., count=0)
     bond_scale = fit_training_bond_scale(SimpleNamespace(train=records["train"]), cache)
     cfg.update(split_seed=seed, smoke_test=smoke, device=str(device))
-    output = Path(results_dir) / dataset / f"seed_{seed}"
+    result_root = Path(results_dir)
+    if variant is not None:
+        result_root = result_root / "table2" / variant
+    output = result_root / dataset / f"seed_{seed}"
     if smoke:
         output = output / "smoke"
     if output.exists() and any(output.iterdir()) and not resume:
@@ -185,7 +194,11 @@ def train(dataset, seed=0, data_dir="data/processed", results_dir="results", dev
         handler.setFormatter(logging.Formatter("%(asctime)s %(message)s"))
         logger.addHandler(handler)
     try:
-        model = PaSTNet(bond_scale=bond_scale.value).to(device)
+        if variant is None:
+            model = PaSTNet(bond_scale=bond_scale.value).to(device)
+        else:
+            from pastnet.table2 import build_model
+            model = build_model(variant, bond_scale=bond_scale.value).to(device)
         metadata = dict(signature=signature, standardizer=scaler, bond_scale=bond_scale.metadata(),
                         parameter_count=sum(p.numel() for p in model.parameters()),
                         n_train=len(records["train"]), n_valid=len(records["valid"]),
@@ -290,6 +303,8 @@ def train(dataset, seed=0, data_dir="data/processed", results_dir="results", dev
                       test_evaluations=1, n_train=len(records["train"]), n_valid=len(records["valid"]), n_test=len(test_records),
                       parameter_count=metadata["parameter_count"], elapsed_seconds=time.monotonic()-began,
                       peak_cuda_memory_mib=torch.cuda.max_memory_allocated(device)/1024**2 if device.type == "cuda" else 0.)
+        if variant is not None:
+            result.update(protocol="table2", variant=variant)
         write_json(receipt, dict(status="completed", best_epoch=best_epoch, metrics=test))
         write_json(output / "metrics.json", result)
         logger.info("Completed %s seed=%s test_%s=%.6f", dataset, seed, cfg["metric"], test[cfg["metric"]])

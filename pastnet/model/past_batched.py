@@ -260,7 +260,9 @@ def forward_paths(block, hidden, *, weights, values=None, valid=None,
     # real shared-core full-minus-self subtraction then cancels exactly.
     singleton = (mask.sum(dim=1) == 1)[:, None, None]
     m_full = torch.where(singleton, m_self, m_full)
-    m_cross = m_full - m_self
+    # The singleton ablation changes only this message; retain both shared-core
+    # evaluations (including K_actual=1 numerical handling) for a matched recipe.
+    m_cross = m_full - m_self if block.singleton_subtraction else m_full
     gate = weights.gate(torch.cat((normalized, m_cross), dim=-1))
     gate = torch.where(mask[:, :, None], gate, torch.zeros_like(gate))
     message = weights.up_projection(m_cross)

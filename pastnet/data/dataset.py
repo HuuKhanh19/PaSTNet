@@ -21,7 +21,7 @@ DEFAULT_TARGET_COL = "target"
 
 @dataclass(frozen=True)
 class MoleculeConfig:
-    """data_root contains the supplied seed_0 through seed_2 directories."""
+    """data_root contains prepared seed_<seed> directories (0 through 4)."""
 
     data_root: Path = DEFAULT_DATA_ROOT
     split_seed: int = 0
@@ -166,8 +166,8 @@ def load_splits(config=None):
     No scaffold splitting, shuffling, target normalization, or disk writes occur.
     """
     config = config if config is not None else MoleculeConfig()
-    if config.split_seed not in (0, 1, 2):
-        raise ValueError("Molecule split_seed must be one of 0, 1, 2")
+    if type(config.split_seed) is not int or config.split_seed not in (0, 1, 2, 3, 4):
+        raise ValueError("Molecule split_seed must be one of 0, 1, 2, 3, 4")
     directory = Path(config.data_root) / f"seed_{config.split_seed}"
     names = ("train", "valid", "test") if config.include_test else ("train", "valid")
     paths = [directory / f"{split}.csv" for split in names]

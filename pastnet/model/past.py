@@ -214,8 +214,12 @@ class PaSTBlock(nn.Module):
     """
 
     def __init__(self, order, stage=1, *, hidden_dim=HIDDEN_DIM, pair_dim=PAIR_DIM, num_stages=3,
-                 num_tensor_layers=TENSOR_LAYERS, stochastic_depth_max=0.0, layerscale_init=0.1):
+                 num_tensor_layers=TENSOR_LAYERS, stochastic_depth_max=0.0, layerscale_init=0.1,
+                 singleton_subtraction=True):
         super().__init__()
+        if type(singleton_subtraction) is not bool:
+            raise ValueError("singleton_subtraction must be boolean")
+        self.singleton_subtraction = singleton_subtraction
         if type(order) is not int or not 0 <= order <= 3:
             raise ValueError("PaST order must be an integer from 0 to 3")
         self.hidden_dim = hidden_dim
