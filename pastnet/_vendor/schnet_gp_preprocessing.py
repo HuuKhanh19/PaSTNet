@@ -1,4 +1,4 @@
-"""Preprocessing functions extracted unchanged from pinned SchNet-GP."""
+"""SchNet-GP preprocessing with English comments and docstrings."""
 
 from typing import List
 import pandas as pd
@@ -15,9 +15,9 @@ def validate_smiles(smiles: str) -> bool:
         RDLogger.EnableLog('rdApp.*')
 
 def target_column_names(n_tasks: int) -> List[str]:
-    """Tên cột nhãn trong DataFrame đã tiền xử lý.
+    """Return label column names for the preprocessed DataFrame.
 
-    - 1 task  -> ['target']            (giữ nguyên convention cũ, cache tương thích)
+    - 1 task  -> ['target']            (preserves legacy naming and cache compatibility)
     - >1 task -> ['target_0', ...]     (multi-label)
     """
     if n_tasks == 1:
@@ -30,23 +30,23 @@ def preprocess_dataframe(
     label_columns: List[str],
     task_type: str,
 ) -> pd.DataFrame:
-    """Clean DataFrame: validate SMILES, remove duplicates, chuẩn hoá cột nhãn.
+    """Clean a DataFrame: validate SMILES, remove duplicates, standardize label columns.
 
-    Nhãn được đổi tên thành 'target' (single-task) hoặc 'target_0..' (multi-label).
-    - single-task (regression/classification): bỏ hàng thiếu nhãn.
-    - multi-label: GIỮ ô trống (= nhãn thiếu, xử lý bằng mask ở loss); chỉ bỏ hàng
-      không có nhãn nào.
+    Labels are renamed to 'target' (single-task) or 'target_0', etc. (multi-label).
+    - single-task (regression/classification): drop rows with missing labels.
+    - multi-label: keep missing labels as NaN for masking in the loss; drop only
+      rows with no available labels.
     """
     df = df.copy()
     initial = len(df)
     n_tasks = len(label_columns)
 
-    # Ép nhãn về số (ô trống -> NaN).
+    # Convert labels to numeric values (empty cells become NaN).
     for c in label_columns:
         df[c] = pd.to_numeric(df[c], errors='coerce')
 
     if task_type == 'multilabel':
-        # Bỏ hàng thiếu SMILES hoặc không có bất kỳ nhãn nào.
+        # Drop rows with missing SMILES or no available labels.
         df = df.dropna(subset=[smiles_column])
         df = df[df[label_columns].notna().any(axis=1)]
     else:
@@ -70,8 +70,8 @@ def preprocess_dataframe(
     df = df[[smiles_column] + label_columns].copy()
     df.columns = ['smiles'] + out_cols
 
-    # Nhãn classification giữ dạng float (0.0/1.0, NaN cho thiếu) để dùng
-    # BCEWithLogits + mask; regression cũng float.
+    # Keep classification labels as floats (0.0/1.0, NaN for missing values)
+    # for masked BCEWithLogits; regression targets are floats as well.
     for c in out_cols:
         df[c] = df[c].astype(float)
 
